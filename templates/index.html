@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dự đoán Khả Năng Tín Dụng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">🔮 Dự đoán Rủi Ro Tín Dụng</h1>
+        <form method="POST" class="space-y-4">
+            <div>
+                <label class="block text-gray-700 font-medium mb-2" for="RevolvingUtilizationOfUnsecuredLines">Tỷ lệ sử dụng tín dụng quay vòng:</label>
+                <input type="number" step="0.01" name="RevolvingUtilizationOfUnsecuredLines" required 
+                       class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="VD: 0.75">
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2" for="NumberOfTimes90DaysLate">Số lần trễ hạn trên 90 ngày:</label>
+                <input type="number" name="NumberOfTimes90DaysLate" required 
+                       class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="VD: 2">
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2" for="NumberOfDependents">Số người phụ thuộc:</label>
+                <input type="number" name="NumberOfDependents" required 
+                       class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="VD: 3">
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2" for="age">Tuổi:</label>
+                <input type="number" name="age" required 
+                       class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="VD: 35">
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2" for="MonthlyIncome">Thu nhập hàng tháng (USD):</label>
+                <input type="number" step="0.01" name="MonthlyIncome" required 
+                       class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="VD: 5000">
+            </div>
+            <button type="submit" 
+                    class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                🔍 Dự đoán
+            </button>
+        </form>
+
+        {% if prediction is not none %}
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Kết quả dự đoán:</h2>
+            <div class="bg-gray-50 p-4 rounded-md">
+                <p class="text-lg font-medium text-blue-600">
+                    {% if prediction == 0 %}
+                    ✅ Kết quả: <b>Khả năng tín dụng tốt</b>
+                    {% else %}
+                    ❌ Kết quả: <b>Rủi ro cao</b>
+                    {% endif %}
+                </p>
+                {% if probabilities %}
+                <h3 class="text-md font-semibold text-gray-700 mt-4">Tỷ lệ dự đoán:</h3>
+                <table class="w-full border-collapse mt-2">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="py-2 px-4 text-left text-gray-700 font-medium">Loại</th>
+                            <th class="py-2 px-4 text-left text-gray-700 font-medium">Tỷ lệ (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for label, prob in probabilities.items() %}
+                        <tr class="border-b">
+                            <td class="py-2 px-4">{{ label }}</td>
+                            <td class="py-2 px-4">{{ prob }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    
+</body>
+</html>
